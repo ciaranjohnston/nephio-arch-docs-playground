@@ -1,0 +1,48 @@
+@startuml
+!include  https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+!include  https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+Person_Ext(admin, "Network administrator", "Administrator of networks, cloud infrastructure or both")
+System_Ext(service_orchestrator, "External Automation Systems", "Software systems responsible for automatically provisioning and managing networks, cloud infrastructure, or both")
+
+System_Boundary(nephio, "Nephio") {
+    System(porch, "Porch", "Package Orchestration Server is a k8s extension apiserver which manages the lifecycle of KRM configuration packages")
+    System(nephio_core, "Nephio Core", "Set of controllers responsible for handling different aspects of workload and cluster specialisation and actuation")
+    System(k8s_api, "Kubernetes API Server", "a component of the Kubernetes control plane that exposes the Kubernetes API. The API server is the front end for the Kubernetes control plane")
+    System(configsync, "ConfigSync", "GitOps service which lets administrators deploy configurations from a source of truth, with the flexibility to support one or many clusters in a hybrid or multi-cloud environment")
+    ContainerDb(gitrepomgr, "Git Repository Manager", "git", "System for hosting git repositories and supporting remote branch management and merging")
+}
+
+System_Boundary(networks, "Supported Network Functions") {
+    System_Ext(oai, "Open Air Interface", "Open Source RAN and core implementation")
+    System_Ext(free5g_core, "Free 5G Core", "Open Source implementation the 5G core network (5GC) defined in 3GPP Release 15 (R15) and beyond")
+}
+
+System_Ext(clouds, "Cloud Providers", "Providers of Kubernetes clusters, such as GCP / Openshift and local kind clusters")
+
+Rel_D(admin, k8s_api, "Manage packages")
+Rel_D(service_orchestrator, k8s_api, "Manage packages")
+
+' Porch relations
+Rel_U(porch, k8s_api, "Manage Packages / Package Variants")
+Rel_R(porch, gitrepomgr, "Manage Packages / Package Variants")
+
+' ConfigSync relations
+Rel_L(configsync, gitrepomgr, "Manage K8S resources")
+Rel_U(configsync, k8s_api, "Manage K8S resources")
+Rel_D(configsync, clouds, "Manage K8S resources")
+
+' Nephio core relations
+Rel_U(nephio_core, k8s_api, "Manage K8S resources")
+Rel_D(nephio_core, clouds, "Create, configure and manage clusters")
+Rel_D(nephio_core, clouds, "Create, configure and manage network function workloads")
+Rel_D(nephio_core, oai, "Manage OAI Network Functions during runtime")
+Rel_D(nephio_core, free5g_core, "Manage Free5GC workloads during runtime")
+
+' Workload relations
+Rel_D(free5g_core, clouds, "Execute on cloud infrastructure")
+Rel_D(oai, clouds, "Execute on cloud infrastructure")
+
+
+
+@enduml

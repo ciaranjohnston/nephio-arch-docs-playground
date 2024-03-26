@@ -1,0 +1,31 @@
+@startuml
+!include  https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!include  https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+
+Person_Ext(admin, "Network administrator", "Administrator of networks, cloud infrastructure or both")
+System_Ext(service_orchestrator, "External Automation Systems", "Software systems responsible for automatically provisioning and managing networks, cloud infrastructure, or both")
+
+System(nephio, "Nephio", "Kubernetes-based cloud native automation system, supporting deployment and management of multi-vendor cloud infrastructure and network functions across large scale edge deployments")
+
+System_Boundary(networks, "Supported Network Functions") {
+    System_Ext(oai, "Open Air Interface", "Open Source RAN and core implementation")
+    System_Ext(free5g_core, "Free 5G Core", "Open Source implementation the 5G core network (5GC) defined in 3GPP Release 15 (R15) and beyond")
+}
+
+System_Ext(clouds, "Cloud Providers", "Providers of Kubernetes clusters, such as GCP / Openshift and local kind clusters")
+
+Rel_D(admin, nephio, "Manage packages")
+Rel_D(service_orchestrator, nephio, "Manage packages")
+
+' Relationships from configsync in mgt cluster
+
+Rel_D(nephio, clouds, "Create, configure and manage clusters")
+Rel_D(nephio, clouds, "Create, configure and manage network function workloads")
+
+Rel_D(nephio, oai, "Manage OAI Network Functions during runtime")
+Rel_D(nephio, free5g_core, "Manage Free5GC workloads during runtime")
+Rel_D(free5g_core, clouds, "Execute on cloud infrastructure")
+Rel_D(oai, clouds, "Execute on cloud infrastructure")
+
+@enduml
