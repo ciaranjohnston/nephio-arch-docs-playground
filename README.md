@@ -18,3 +18,24 @@ Nephio is an amalgamation of software systems, so a system landscape provides a 
 ### Nephio Core
 
 ![Nephio Core Component View](diagrams/gen/nephio-core-component-view.png)
+
+Nephio core is a collection of operators and functions that perform the fundamental aspects of Nephio use cases, independent of the specifics of vendor implementations. 
+
+The controllers for OAI and Free5GC are represented here as while they are vendor extensions to Nephio they are for now part of the Nephio system.
+
+
+### Porch
+
+![Nephio Porch Component View](diagrams/gen/nephio-porch-component-view.png)
+
+### ConfigSync
+
+TBD - is this a component of Nephio or a dependency?
+
+## Deployment View
+
+TBD
+
+## Representative Use Cases
+
+TBD - use cases between the major components

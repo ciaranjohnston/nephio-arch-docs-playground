@@ -2,30 +2,31 @@
 !include  https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
 !include  https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
 
-
+' External actors
 Person_Ext(admin, "Network administrator", "Administrator of networks, cloud infrastructure or both")
-System_Ext(service_orchestrator, "External Automation Systems", "Software systems responsible for automatically provisioning and managing networks, cloud infrastructure, or both")
+System_Ext(core_service_orchestrator, "Core Service Orchestrator", "Core Domain service orchestrator")
+System_Ext(oran_service_orchestrator, "O-RAN Service Orchestrator", "RAN domain service orchestrator")
+System_Ext(cicd_system, "GitOps / CI / CD Systems", "Continuous integration / continuous delivery platforms verifying workloads and packages before onboarding to Nephio, or using Nephio as part of their operations")
 
+' Core Nephio function
 System(nephio, "Nephio", "Kubernetes-based cloud native automation system, supporting deployment and management of multi-vendor cloud infrastructure and network functions across large scale edge deployments")
 
-System_Boundary(networks, "Supported Network Functions") {
-    System_Ext(oai, "Open Air Interface", "Open Source RAN and core implementation")
-    System_Ext(free5g_core, "Free 5G Core", "Open Source implementation the 5G core network (5GC) defined in 3GPP Release 15 (R15) and beyond")
-}
-
+' Southbound dependencies
+System_Ext(supported_nfs, "Supported network functions", "Network functions supported by Nephio (currently free5gc and OAI, with other vendors implementing support independently)")
 System_Ext(clouds, "Cloud Providers", "Providers of Kubernetes clusters, such as GCP / Openshift and local kind clusters")
 
-Rel_D(admin, nephio, "Manage packages")
-Rel_D(service_orchestrator, nephio, "Manage packages")
+' Actor - nephio relationships
+Rel_D(admin, nephio, "Manage NFs, workloads and clusters")
+Rel_D(core_service_orchestrator, nephio, "Manage NFs, workloads and clusters")
+Rel_D(oran_service_orchestrator, nephio, "Manage NFs, workloads and clusters")
 
-' Relationships from configsync in mgt cluster
+Rel_R(cicd_system, nephio, "Onboard packages and other artefacts, trigger management use cases")
 
-Rel_D(nephio, clouds, "Create, configure and manage clusters")
+' Nephio - managed entity relationships
+Rel_D(nephio, clouds, "Create, configure and manage clusters (e.g. O2IMS)")
 Rel_D(nephio, clouds, "Create, configure and manage network function workloads")
 
-Rel_D(nephio, oai, "Manage OAI Network Functions during runtime")
-Rel_D(nephio, free5g_core, "Manage Free5GC workloads during runtime")
-Rel_D(free5g_core, clouds, "Execute on cloud infrastructure")
-Rel_D(oai, clouds, "Execute on cloud infrastructure")
+Rel_D(nephio, supported_nfs, "Manage Network Functions during runtime")
+Rel_D(supported_nfs, clouds, "Execute on cloud infrastructure")
 
 @enduml
