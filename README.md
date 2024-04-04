@@ -1,15 +1,18 @@
 # nephio-arch-docs-playground
-Some experiments on working with C4 model to document Nephio
+Some experiments on working with [C4 model](https://c4model.com/) to document Nephio.
+
+## Prerequisites
+To work with these PlantUML files, you will need [Graphviz](https://graphviz.org/download/) installed.
 
 ## System Context View
 
-![System Context](diagrams/gen/nephio-system-context.png)
+![System Context](diagrams/gen/level1-nephio-system.png)
 
 The system context view gives a high level perspective of the Nephio software system and the external entities that it interacts with. There are no deployment considerations in this view - the main purpose of the picture is to depict what is the responsibility and scope of Nephio, and the key interfaces and capabilities it exposes to deliver on that responsibility.
 
 ## System Landscape View
 
-![System Landscape](diagrams/gen/nephio-system-landscape.png)
+![System Landscape](diagrams/gen/level2-nephio-container.png)
 
 Nephio is an amalgamation of software systems, so a system landscape provides a high-level view of how those software systems interoperate.
 
@@ -17,7 +20,7 @@ Nephio is an amalgamation of software systems, so a system landscape provides a 
 
 ### Nephio Core
 
-![Nephio Core Component View](diagrams/gen/nephio-core-component-view.png)
+![Nephio Core Component View](diagrams/gen/level3-nephio-core-component.png)
 
 Nephio core is a collection of operators and functions that perform the fundamental aspects of Nephio use cases, independent of the specifics of vendor implementations. 
 
